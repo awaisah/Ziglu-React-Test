@@ -2,6 +2,21 @@ import { Asset } from './Assets';
 
 const API_KEY = "5df9246ffdmsha8a65ac03eb4012p1fd0b8jsn5332cfaafc10"
 
+export enum PricerErrorKind {
+  UNSPECIFIED = "Unknown",
+  SOURCE_DESTINATION_EQUAL = "Source and destination asset must differ, but are the same",
+  SOURCE_DESTINATION_NOT_USD = "Either source or destination asset must be USD, but neither were",
+  INSUFFICIENT_BALANCE = "Attempted to sell source asset without sufficient balance",
+  NEGATIVE_QUOTE_PRICE = "Unexpected negative quote price received",
+}
+
+export class PricerError extends Error {
+  constructor(kind: PricerErrorKind) {
+    super(kind);
+    Object.setPrototypeOf(this, PricerError.prototype);
+  }
+}
+
 // ICoinPrice represents the price for an asset pair, which is a source (what
 // we are selling) and destination (what we are buying).
 export interface ICoinPrice {
@@ -52,6 +67,7 @@ export interface ICoinPrice {
 
 
 
+
 export interface IPricingProvider {
   getCoinPrice: (source: Asset, destination: Asset) => Promise<ICoinPrice>;
 };
@@ -61,25 +77,14 @@ export interface IPricingProvider {
 // Hint: the Asset enum's values correspond with the ID of the USD/coin pairs
 // in the GetCoin API.
 export class MyPricer implements IPricingProvider {
-  private getAssetUUID(asset: Asset): String {
-    switch (asset) {
-      case Asset.USD:
-        return "yhjMzLPhuIDl"
-      case Asset.BTC:
-        return "Qwsogvtv82FCd"
-      case Asset.ETH:
-        return "razxDUgYGNAdQ"
-      case Asset.ADA:
-        return "qzawljRxB5bYu"
-      default:
-        return ""
-    }
-  }
-
   public getCoinPrice(source: Asset, destination: Asset): Promise<ICoinPrice> {
     return new Promise(async (resolve, reject) => {
-      let price: number = -1
-      await fetch("https://coinranking1.p.rapidapi.com/coin/" + this.getAssetUUID(destination) + "/price?referenceCurrencyUuid=" + this.getAssetUUID(source), {
+      if (source === destination) {
+        throw new PricerError(PricerErrorKind.SOURCE_DESTINATION_EQUAL);
+      } else if (source !== Asset.USD && destination !== Asset.USD) {
+        throw new PricerError(PricerErrorKind.SOURCE_DESTINATION_NOT_USD)
+      }
+      await fetch("https://coinranking1.p.rapidapi.com/coin/" + destination + "/price?referenceCurrencyUuid=" + source, {
         "method": "GET",
         "headers": {
           "x-rapidapi-host": "coinranking1.p.rapidapi.com",
@@ -95,13 +100,10 @@ export class MyPricer implements IPricingProvider {
             Destination: destination,
             Price: json.data.price
           })
-       
         })
         .catch(err => {
           reject(err);
         });
-  
-        
     })
   }
 }
