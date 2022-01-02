@@ -1,5 +1,7 @@
 import { Asset } from './Assets';
 
+const API_KEY = "5df9246ffdmsha8a65ac03eb4012p1fd0b8jsn5332cfaafc10"
+
 // ICoinPrice represents the price for an asset pair, which is a source (what
 // we are selling) and destination (what we are buying).
 export interface ICoinPrice {
@@ -47,30 +49,74 @@ export interface ICoinPrice {
 // requested.
 //
 // https://rapidapi.com/Coinranking/api/coinranking1/
+
+
+
 export interface IPricingProvider {
-  getCoinPrice: (source: Asset, destination: Asset) => ICoinPrice;
+  getCoinPrice: (source: Asset, destination: Asset) => Promise<ICoinPrice>;
 };
 
 // TODO implement MyPricer using the RapidAPI Get Coin endpoint.
 //
 // Hint: the Asset enum's values correspond with the ID of the USD/coin pairs
 // in the GetCoin API.
-class MyPricer implements IPricingProvider {
-  public getCoinPrice(source: Asset, destination: Asset): ICoinPrice {
-    throw new Error('Unimplemented!');
+export class MyPricer implements IPricingProvider {
+  private getAssetUUID(asset: Asset): String {
+    switch (asset) {
+      case Asset.USD:
+        return "yhjMzLPhuIDl"
+      case Asset.BTC:
+        return "Qwsogvtv82FCd"
+      case Asset.ETH:
+        return "razxDUgYGNAdQ"
+      case Asset.ADA:
+        return "qzawljRxB5bYu"
+      default:
+        return ""
+    }
+  }
+
+  public getCoinPrice(source: Asset, destination: Asset): Promise<ICoinPrice> {
+    return new Promise(async (resolve, reject) => {
+      let price: number = -1
+      await fetch("https://coinranking1.p.rapidapi.com/coins", {
+        "method": "GET",
+        "headers": {
+          "x-rapidapi-host": "coinranking1.p.rapidapi.com",
+          "x-rapidapi-key": API_KEY
+        }
+      })
+        .then(response => {
+          return response.json()
+        })
+        .then((json) => {
+          console.log(json)
+          resolve({
+            Source: source,
+            Destination: destination,
+            Price: json.data.price
+          })
+       
+        })
+        .catch(err => {
+          reject(err);
+        });
+  
+        
+    })
   }
 }
 
 // LocalPricer is a simple implementation that just prices all assets at 100
 // USD. It can be used for simple testing.
 export class LocalPricer implements IPricingProvider {
-  public getCoinPrice(source: Asset, destination: Asset): ICoinPrice {
+  public getCoinPrice(source: Asset, destination: Asset): Promise<ICoinPrice> {
     const assetPrice = 100.00;
 
-    return {
+    return Promise.resolve({
       Source: source,
       Destination: destination,
-      Price: (source === Asset.USD ? assetPrice : 1/assetPrice),
-    };
+      Price: (source === Asset.USD ? assetPrice : 1 / assetPrice),
+    });
   }
 }

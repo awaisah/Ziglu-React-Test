@@ -1,6 +1,6 @@
 import { Asset } from './Assets';
 import { Bank } from './bank';
-import { IPricingProvider } from './Pricer';
+import { ICoinPrice, IPricingProvider } from './Pricer';
 
 interface ITrade {
   ExecutedAt: Date;
@@ -57,37 +57,45 @@ export class AssetExchange {
   // - It is an error to try to spend more source asset than in the bank.
   // - It is an error to exchange when the Pricer cannot return a price for
   //   the source/destination combination.
-  public exchange(source: Asset, destination: Asset, volume: number): ITrade {
-    if (source === destination) {
-      throw new ExchangeError(ExchangeErrorKind.SOURCE_DESTINATION_EQUAL);
-    } else if (volume <= 0) {
-      throw new ExchangeError(ExchangeErrorKind.INVALID_VOLUME);
-    }
+  public async exchange(source: Asset, destination: Asset, volume: number): Promise<ITrade> {
+    return new Promise(async (resolve, reject) => {
+        if (source === destination) {
+          throw new ExchangeError(ExchangeErrorKind.SOURCE_DESTINATION_EQUAL);
+        } else if (volume <= 0) {
+          throw new ExchangeError(ExchangeErrorKind.INVALID_VOLUME);
+        }
+    
+        // Caution! This can throw an exception if the pricer doesn't have a pair
+        // for the source/destination combination.
+            
+        await this.pricingProvider.getCoinPrice(source, destination)
+        .then((quote) => {
+    
+            if (quote.Price < 0) {
+              throw new ExchangeError(ExchangeErrorKind.NEGATIVE_QUOTE_PRICE);
+            }
+        
+            const sourceAmountToSell = quote.Price * volume;
+            const currentBalance = this.bank.getBalance(source);
+        
+            if (currentBalance < sourceAmountToSell) {
+              throw new ExchangeError(ExchangeErrorKind.INSUFFICIENT_BALANCE);
+            }
+        
+            this.bank.adjustBalance(source, -sourceAmountToSell);
+            this.bank.adjustBalance(destination, volume);
+        
+            const trade = Object.assign({}, quote, {
+              ExecutedAt: new Date(),
+              Volume: volume,
+            });
+            this.trades.push(trade);
 
-    // Caution! This can throw an exception if the pricer doesn't have a pair
-    // for the source/destination combination.
-    const quote = this.pricingProvider.getCoinPrice(source, destination);
-
-    if (quote.Price < 0) {
-      throw new ExchangeError(ExchangeErrorKind.NEGATIVE_QUOTE_PRICE);
-    }
-
-    const sourceAmountToSell = quote.Price * volume;
-    const currentBalance = this.bank.getBalance(source);
-
-    if (currentBalance < sourceAmountToSell) {
-      throw new ExchangeError(ExchangeErrorKind.INSUFFICIENT_BALANCE);
-    }
-
-    this.bank.adjustBalance(source, -sourceAmountToSell);
-    this.bank.adjustBalance(destination, volume);
-
-    const trade = Object.assign({}, quote, {
-      ExecutedAt: new Date(),
-      Volume: volume,
-    });
-    this.trades.push(trade);
-
-    return trade;
+            resolve(trade)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })
   }
 }
