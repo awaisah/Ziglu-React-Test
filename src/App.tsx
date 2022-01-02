@@ -1,21 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {} from 'react';
 import './App.css';
 import { Asset } from './util/Assets';
-import { MyPricer } from './util/Pricer';
+import PricesBox from './components/PricesBox'
 
 const App = () => {
-  useEffect(() => {
-    const pricer: MyPricer = new MyPricer()
-
-    pricer.getCoinPrice(Asset.USD, Asset.BTC)
-    .then((val) => {
-      console.log(val)
-    })
-    
-  })
   return (
     <div className="App">
-      
+      <PricesBox />
     </div>
   );
 }

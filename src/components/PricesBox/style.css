@@ -1,0 +1,4 @@
+.container-prices-box {
+    display: flex;
+    flex-direction: row;
+}
