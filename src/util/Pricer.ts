@@ -79,7 +79,7 @@ export class MyPricer implements IPricingProvider {
   public getCoinPrice(source: Asset, destination: Asset): Promise<ICoinPrice> {
     return new Promise(async (resolve, reject) => {
       let price: number = -1
-      await fetch("https://coinranking1.p.rapidapi.com/coins", {
+      await fetch("https://coinranking1.p.rapidapi.com/coin/" + this.getAssetUUID(destination) + "/price?referenceCurrencyUuid=" + this.getAssetUUID(source), {
         "method": "GET",
         "headers": {
           "x-rapidapi-host": "coinranking1.p.rapidapi.com",
@@ -90,7 +90,6 @@ export class MyPricer implements IPricingProvider {
           return response.json()
         })
         .then((json) => {
-          console.log(json)
           resolve({
             Source: source,
             Destination: destination,
