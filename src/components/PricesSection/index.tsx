@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import './style.css';
 import { Asset } from '../../util/Assets';
 import PriceTicker from '../PriceTicker';
 import ToggleSwitch from '../ToggleSwitch';
@@ -10,14 +9,14 @@ interface IPricesSectionProps {
 
 const PricesSection: FC<IPricesSectionProps> = () => {
 
-  const [fromUSD, setFromUSD] = useState(true)
+  const [inUSD, setInUSD] = useState(true)
 
   return (
-    <>
-      <h1>Prices</h1>
-      <ToggleSwitch enabled={fromUSD} setEnabled={setFromUSD} text="Toggle USD to Coin" />
-      <div className="container-prices-box">
-        {fromUSD ?
+    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-semibold mb-2">Prices</h1>
+      <ToggleSwitch enabled={inUSD} setEnabled={setInUSD} text="Showing In USD" />
+      <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-3 xl:gap-x-8">
+        {inUSD ?
           <>
             <PriceTicker source={Asset.USD} destination={Asset.BTC} coinName="BTC/USD" />
             <PriceTicker source={Asset.USD} destination={Asset.ETH} coinName="BTC/ETH" />
@@ -29,7 +28,7 @@ const PricesSection: FC<IPricesSectionProps> = () => {
             <PriceTicker source={Asset.ADA} destination={Asset.USD} coinName="USD/ADA" />
           </>}
       </div>
-    </>
+    </div>
   );
 }
 

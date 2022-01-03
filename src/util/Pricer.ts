@@ -1,6 +1,6 @@
 import { Asset } from './Assets';
 
-const API_KEY = "5df9246ffdmsha8a65ac03eb4012p1fd0b8jsn5332cfaafc10"
+const API_KEY = "def2d01716msh03b742007066eadp10a8cdjsn2444bfe06837"
 
 export enum PricerErrorKind {
   UNSPECIFIED = "Unknown",

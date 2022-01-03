@@ -1,21 +1,18 @@
-import { FC, useContext, useEffect } from 'react';
-import './style.css';
-import Context from '../../context/Context'
-import { Asset } from '../../util/Assets';
+import { FC } from 'react';
 
 interface IAccountOverviewProps {
-    name: String,
-    balance: number
+  name: String,
+  balance: number
 }
 
-const AccountOverview: FC<IAccountOverviewProps> = ({name, balance}) => {
+const AccountOverview: FC<IAccountOverviewProps> = ({ name, balance }) => {
   return (
-    <>
-      <div className="container-account-overview">
-        <h2>{name}</h2>
-        <h3 className="price-title">{balance}</h3>
+    <div className="mt-3 border-2 rounded-lg border-gray-200 p-5 text-center">
+      <div className="">
+        <h2 className="mb-3 font-semibold text-2xl">{name}</h2>
+        <h3 className="text-lg font-semibold">{balance}</h3>
       </div>
-    </>
+    </div>
   );
 }
 

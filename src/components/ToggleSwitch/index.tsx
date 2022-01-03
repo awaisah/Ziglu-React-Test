@@ -1,31 +1,41 @@
 import { FC } from "react";
+import { Switch } from '@headlessui/react'
 
 interface IToggleSwtichProps {
-  enabled: boolean, 
+  enabled: boolean,
   setEnabled: (val: boolean) => void,
   text: String
 }
 
-const ToggleSwitch: FC<IToggleSwtichProps> = ({enabled, setEnabled, text}) => {
-  const toggle = () => {
-    setEnabled(!enabled)
-  }
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
+
+const ToggleSwitch: FC<IToggleSwtichProps> = ({ enabled, setEnabled, text }) => {
   return (
-    <div className="toggle-switch">
-      <input
-        type="checkbox"
-        className="toggle-switch-checkbox"
-        name="toggleSwitch"
-        id="toggleSwitch"
-        onChange={toggle}
-      />
-      <label className="toggle-switch-label" htmlFor="toggleSwitch">
-        <span className="toggle-switch-inner" />
+    <>
+      <label className="text-xl mr-4 font-medium text-gray-700">
         {text}
-        <span className="toggle-switch-switch" />
       </label>
-    </div>
-  );
+      <Switch
+        checked={enabled}
+        onChange={setEnabled}
+        className={classNames(
+          enabled ? 'bg-indigo-600' : 'bg-gray-200',
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+        )}
+      >
+        <span className="sr-only">{text}</span>
+        <span
+          aria-hidden="true"
+          className={classNames(
+            enabled ? 'translate-x-5' : 'translate-x-0',
+            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+          )}
+        />
+      </Switch>
+    </>
+  )
 }
 
 export default ToggleSwitch;
