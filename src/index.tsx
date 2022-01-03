@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import BankContext from './context/BankContext'
+import {bank} from './util/bank'
 
 ReactDOM.render(
+  <BankContext.Provider value={{bank}}>
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
+    </BankContext.Provider>,
   document.getElementById('root')
 );
 

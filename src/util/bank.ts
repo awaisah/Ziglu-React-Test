@@ -37,3 +37,7 @@ export class Bank {
     this.setBalance(asset, this.getBalance(asset) + adjustment);
   }
 }
+
+const bank = new Bank()
+
+export {bank}

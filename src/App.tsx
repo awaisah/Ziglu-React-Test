@@ -1,13 +1,14 @@
-import React, {} from 'react';
+import React, { } from 'react';
 import './App.css';
-import { Asset } from './util/Assets';
-import PricesBox from './components/PricesBox'
+import PricesSection from './components/PricesSection'
+import AccountSection from './components/AccountSection'
 
 const App = () => {
   return (
-    <div className="App">
-      <PricesBox />
-    </div>
+      <div className="App">
+        <PricesSection />
+        <AccountSection />
+      </div>
   );
 }
 

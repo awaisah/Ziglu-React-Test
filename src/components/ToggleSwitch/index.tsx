@@ -1,11 +1,12 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
 interface IToggleSwtichProps {
   enabled: boolean, 
-  setEnabled: (val: boolean) => void
+  setEnabled: (val: boolean) => void,
+  text: String
 }
 
-const ToggleSwitch: FC<IToggleSwtichProps> = ({enabled, setEnabled}) => {
+const ToggleSwitch: FC<IToggleSwtichProps> = ({enabled, setEnabled, text}) => {
   const toggle = () => {
     setEnabled(!enabled)
   }
@@ -20,6 +21,7 @@ const ToggleSwitch: FC<IToggleSwtichProps> = ({enabled, setEnabled}) => {
       />
       <label className="toggle-switch-label" htmlFor="toggleSwitch">
         <span className="toggle-switch-inner" />
+        {text}
         <span className="toggle-switch-switch" />
       </label>
     </div>
