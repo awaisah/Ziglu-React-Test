@@ -19,8 +19,9 @@ const ExchangeSection: FC<IExchangeSectionProps> = () => {
 
     const submitForm = (event: React.SyntheticEvent) => {
         event.preventDefault()
+        setErrorMessage("")
         exchange!.exchange(source, destination, amount)
-            .then((trade) => {
+            .then(() => {
                 setVal(val+1)
                 return
             })
@@ -37,7 +38,7 @@ const ExchangeSection: FC<IExchangeSectionProps> = () => {
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                     <label>
                         Source:
-                        <select id="source" onChange={(e) => { setSource(e.target.value as Asset) }}>
+                        <select name="source" onChange={(e) => { setSource(e.target.value as Asset) }}>
                             <option value={Asset.USD}>USD</option>
                             <option value={Asset.BTC}>Bitcoin</option>
                             <option value={Asset.ETH}>Ethereum</option>
@@ -46,7 +47,7 @@ const ExchangeSection: FC<IExchangeSectionProps> = () => {
                     </label>
                     <label>
                         Destination:
-                        <select id="destination" onChange={(e) => { setDestination(e.target.value as Asset) }}>
+                        <select name="destination" onChange={(e) => { setDestination(e.target.value as Asset) }}>
                             <option value={Asset.USD}>USD</option>
                             <option value={Asset.BTC}>Bitcoin</option>
                             <option value={Asset.ETH}>Ethereum</option>

@@ -8,6 +8,7 @@ import Context from './context/Context'
 import { Bank } from './util/bank'
 import { MyPricer } from './util/Pricer'
 import { AssetExchange } from './util/Exchange'
+import PreviousTrades from './components/PreviousTrades';
 
 const bank = new Bank();
 const pricer = new MyPricer()
@@ -23,6 +24,7 @@ const App = () => {
         <PricesSection />
         <AccountSection />
         <ExchangeSection />
+        <PreviousTrades />
       </div>
   </Context.Provider>
   );

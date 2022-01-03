@@ -17,7 +17,7 @@ const AccountSection: FC<IAccountSectionProps> = () => {
 
   const accounts = () => {
     return bank!.assetAccounts.map((asset) => {
-      return <AccountOverview name={getAssetName(asset)} balance={bank!.getBalance(asset)} />
+      return <AccountOverview name={getAssetName(asset)} balance={bank!.getBalance(asset)} key={asset} />
     })
   }
 

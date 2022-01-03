@@ -1,0 +1,4 @@
+container-previous-trades {
+    display: flex;
+    flex-direction: row;
+}
