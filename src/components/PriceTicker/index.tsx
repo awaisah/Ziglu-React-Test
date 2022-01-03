@@ -11,10 +11,11 @@ interface IPriceTickerProps {
 
 const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => {
   const [price, setPrice] = useState(0.0)
+  const [showUpdated, setShowUpdated] = useState(false)
 
-  useEffect(() => {
+  const updatePrice = () => {
     const pricer: MyPricer = new MyPricer()
-
+  
     pricer.getCoinPrice(source, destination)
       .then((val) => {
         setPrice(val.Price)
@@ -22,11 +23,28 @@ const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => 
       .catch((error) => {
         console.error(error)
       })
-  })
+  }
+
+  useEffect(() => {
+    setShowUpdated(true)
+    setTimeout(() => {
+      setShowUpdated(false)
+    }, 1000)
+  }, [price])
+
+  useEffect(() => {
+    updatePrice() 
+    const interval = setInterval(updatePrice, 5000, 100);
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [source, destination])
+
   return (
     <div className="container-price-ticker" style={{margin: 10}}>
       <h2>{coinName}</h2>
-      <h3 className="price-title">{price}</h3>
+      <h3 className={"price-title" + (showUpdated ? " title-green" : "")}>{price}</h3>
     </div>
   );
 }
