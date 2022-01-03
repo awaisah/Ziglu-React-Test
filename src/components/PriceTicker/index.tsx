@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useContext } from 'react';
 import './style.css';
 import { Asset } from '../../util/Assets';
-import { MyPricer } from '../../util/Pricer';
+import Context from '../../context/Context';
 
 interface IPriceTickerProps {
   source: Asset
@@ -12,6 +12,8 @@ interface IPriceTickerProps {
 const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => {
   const [price, setPrice] = useState(0.0)
   const [showUpdated, setShowUpdated] = useState(false)
+
+  const {pricer} = useContext(Context)
 
   // This useEffect is run whenever the source or destination changes.
   // Change the showUpdated state so the colour changes for 500ms
@@ -25,9 +27,7 @@ const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => 
   useEffect(() => {
     setPrice(0.0)
     const updatePrice = () => {
-      const pricer: MyPricer = new MyPricer()
-    
-      pricer.getCoinPrice(source, destination)
+      pricer!.getCoinPrice(source, destination)
         .then((val) => {
           setPrice(val.Price)
         })

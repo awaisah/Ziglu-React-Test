@@ -79,6 +79,7 @@ export class AssetExchange {
             const currentBalance = this.bank.getBalance(source);
         
             if (currentBalance < sourceAmountToSell) {
+                console.log(currentBalance, sourceAmountToSell)
               throw new ExchangeError(ExchangeErrorKind.INSUFFICIENT_BALANCE);
             }
         

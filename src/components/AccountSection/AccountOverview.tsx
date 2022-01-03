@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect } from 'react';
 import './style.css';
-import BankContext from '../../context/BankContext'
+import Context from '../../context/Context'
 import { Asset } from '../../util/Assets';
 
 interface IAccountOverviewProps {

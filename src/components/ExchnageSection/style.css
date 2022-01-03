@@ -1,0 +1,10 @@
+.container-exchange-section {
+    display: flex;
+    flex-direction: row;
+}
+form {
+    flex: 1;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}

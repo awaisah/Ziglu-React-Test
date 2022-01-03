@@ -1,17 +1,13 @@
-import React from 'react';
+import React, {  } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import BankContext from './context/BankContext'
-import {bank} from './util/bank'
 
 ReactDOM.render(
-  <BankContext.Provider value={{bank}}>
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-    </BankContext.Provider>,
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
   document.getElementById('root')
 );
 
