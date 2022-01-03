@@ -1,5 +1,4 @@
 import { FC, useEffect, useState, useContext } from 'react';
-import './style.css';
 import { Asset } from '../../util/Assets';
 import Context from '../../context/Context';
 
@@ -35,9 +34,9 @@ const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => 
           console.log(error)
         })
     }
-    // Create a timeout which refreshes the price every 5 seconds
+    // Create a timeout which refreshes the price every 10 seconds
     updatePrice() 
-    const interval = setInterval(updatePrice, 5000);
+    const interval = setInterval(updatePrice, 10000);
 
     return () => {
       clearInterval(interval)
@@ -45,9 +44,9 @@ const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => 
   }, [source, destination])
 
   return (
-    <div className="container-price-ticker" style={{margin: 10}}>
-      <h2>{coinName}</h2>
-      <h3 className={"price-title" + (showUpdated ? " title-green" : "")}>{price}</h3>
+    <div className="mt-3 border-2 rounded-lg border-gray-200 p-5 text-center">
+      <h2 className="mb-3 font-semibold text-2xl">{coinName}</h2>
+      <h3 className={"text-lg font-semibold" + (showUpdated ? " text-green-300" : "")}>{price}</h3>
     </div>
   );
 }
