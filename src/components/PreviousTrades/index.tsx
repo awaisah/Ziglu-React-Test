@@ -69,7 +69,7 @@ const PreviousTrades: FC<IPreviousTradesProps> = () => {
                           return (
                             <>
                               <tr>
-                                <td  className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 font-bold">{index+1}</td>
+                                <td  className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{index+1}</td>
                                 <td  className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{getAssetName(trade.Source)}</td>
                                 <td  className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{getAssetName(trade.Destination)}</td>
                                 <td  className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{trade.ExecutedAt.toDateString()} {trade.ExecutedAt.toTimeString()}</td>
