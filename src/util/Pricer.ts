@@ -80,9 +80,9 @@ export class MyPricer implements IPricingProvider {
   public getCoinPrice(source: Asset, destination: Asset): Promise<ICoinPrice> {
     return new Promise(async (resolve, reject) => {
       if (source === destination) {
-        throw new PricerError(PricerErrorKind.SOURCE_DESTINATION_EQUAL);
+        reject(new PricerError(PricerErrorKind.SOURCE_DESTINATION_EQUAL));
       } else if (source !== Asset.USD && destination !== Asset.USD) {
-        throw new PricerError(PricerErrorKind.SOURCE_DESTINATION_NOT_USD)
+        reject(new PricerError(PricerErrorKind.SOURCE_DESTINATION_NOT_USD))
       }
       await fetch("https://coinranking1.p.rapidapi.com/coin/" + destination + "/price?referenceCurrencyUuid=" + source, {
         "method": "GET",
@@ -95,11 +95,15 @@ export class MyPricer implements IPricingProvider {
           return response.json()
         })
         .then((json) => {
-          resolve({
-            Source: source,
-            Destination: destination,
-            Price: json.data.price
-          })
+          if (!json.data) {
+            reject(json)
+          } else {
+            resolve({
+              Source: source,
+              Destination: destination,
+              Price: json.data.price
+            })
+          }
         })
         .catch(err => {
           reject(err);

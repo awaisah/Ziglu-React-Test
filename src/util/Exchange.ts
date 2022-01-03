@@ -60,9 +60,9 @@ export class AssetExchange {
   public async exchange(source: Asset, destination: Asset, volume: number): Promise<ITrade> {
     return new Promise(async (resolve, reject) => {
         if (source === destination) {
-          throw new ExchangeError(ExchangeErrorKind.SOURCE_DESTINATION_EQUAL);
+          reject(new ExchangeError(ExchangeErrorKind.SOURCE_DESTINATION_EQUAL));
         } else if (volume <= 0) {
-          throw new ExchangeError(ExchangeErrorKind.INVALID_VOLUME);
+        reject(new ExchangeError(ExchangeErrorKind.INVALID_VOLUME));
         }
     
         // Caution! This can throw an exception if the pricer doesn't have a pair
@@ -79,7 +79,6 @@ export class AssetExchange {
             const currentBalance = this.bank.getBalance(source);
         
             if (currentBalance < sourceAmountToSell) {
-                console.log(currentBalance, sourceAmountToSell)
               throw new ExchangeError(ExchangeErrorKind.INSUFFICIENT_BALANCE);
             }
         

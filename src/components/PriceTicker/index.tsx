@@ -32,7 +32,7 @@ const PriceTicker: FC<IPriceTickerProps> = ({source, destination, coinName}) => 
           setPrice(val.Price)
         })
         .catch((error) => {
-          console.error(error)
+          console.log(error)
         })
     }
     // Create a timeout which refreshes the price every 5 seconds
